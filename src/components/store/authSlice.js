@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { auth } from "../../config/firebase";
 
 
 const initialState = {
-    isAuthenticated: localStorage.getItem('isAuthenticated') ? localStorage.getItem('isAuthenticated') : false,
-    accessToken: localStorage.getItem('accessToken') ? localStorage.getItem('accessToken') : null,
-    image: localStorage.getItem('image') ? localStorage.getItem('image') : null,
-    name: localStorage.getItem('name') ? localStorage.getItem('name') : null,
-    email: localStorage.getItem('email') ? localStorage.getItem('email') : null,
+    isAuthenticated: localStorage.getItem("isAuthenticated") ? localStorage.getItem("isAuthenticated") : false,
+    uid: localStorage.getItem("uid") ? localStorage.getItem("uid") : null,
+    image: localStorage.getItem("image") ? localStorage.getItem("image") : null,
+    name: localStorage.getItem("name") ? localStorage.getItem("name") : null,
+    email: localStorage.getItem("email") ? localStorage.getItem("email") : null,
 }
 
 
@@ -15,20 +16,20 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            const { access, image, isAuthenticated, name,email } = action.payload
+            const { uid, image, isAuthenticated, name,email } = action.payload
             const newState = {
-                isAuthenticated,
-                accessToken: access,
-                image: image,
+                uid,
                 name,
                 email,
+                image,
+                isAuthenticated,
             }
 
-            localStorage.setItem('isAuthenticated', isAuthenticated)
-            localStorage.setItem('accessToken', access)
-            localStorage.setItem('image', image)
-            localStorage.setItem('name', name)
-            localStorage.setItem('email', email)
+            localStorage.setItem("uid",uid)
+            localStorage.setItem("name",name)
+            localStorage.setItem("email",email)
+            localStorage.setItem("image",image)
+            localStorage.setItem("isAuthenticated",isAuthenticated)
 
             return newState
         },

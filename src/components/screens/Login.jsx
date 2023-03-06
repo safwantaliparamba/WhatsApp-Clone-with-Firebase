@@ -24,7 +24,7 @@ const Login = (e) => {
 					const userData = {
 						name: result.user.displayName,
 						email: result.user.email,
-						access: res,
+						uid: result.user.uid,
 						isAuthenticated:true,
 						image: result.user.photoURL
 					}
@@ -40,9 +40,9 @@ const Login = (e) => {
 		<Wrapper>
 			<Header>Let's Chat</Header>
 			<LoginSection>
-				<p>Continue login with your Google account</p>
+				<p>Continue by login with your Google account</p>
 				<span onClick={LoginHandler}>
-					<img src={googleIcon} alt="" />
+					<img src={googleIcon} alt="google icon" />
 				</span>
 			</LoginSection>
 		</Wrapper>

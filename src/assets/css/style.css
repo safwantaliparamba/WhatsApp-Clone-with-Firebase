@@ -8,14 +8,18 @@
     text-decoration: none;
     outline: none;
     box-sizing: border-box;
+    user-select: none;
 }
 
 body {
     overflow-x: hidden;
     font-family: "gordita_regular";
     color: #0a0a0a;
-    
 }
+*::-webkit-scrollbar {
+	display: none;
+}
+
 ol,
 ul {
     list-style: none;
