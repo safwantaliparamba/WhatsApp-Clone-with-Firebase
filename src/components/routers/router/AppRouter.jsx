@@ -40,7 +40,7 @@ const ContentWrapper = styled.section`
 
 const SideNav = styled.aside`
 	width: 22%;
-	height: calc(100vh - 128px);
+	height: calc(100vh - 146px);
 	border: 1px solid rgb(38,39,42);
 	background-color: rgb(27 28 31);
 `

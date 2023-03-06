@@ -7,17 +7,19 @@ import { auth } from '../../config/firebase'
 import { authActions } from '../store/authSlice'
 
 const Header = () => {
-    const name = useSelector(state => state.auth.name)
-    const uid = useSelector(state => state.auth.uid)
+    // const name = useSelector(state => state.auth.name)
+    const [uid, image, name] = useSelector(state => {
+        return [state.auth.uid, state.auth.image, state.auth.name]
+    })
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const logoutHandler = ()=>{
+    const logoutHandler = () => {
         signOut(auth)
         dispatch(authActions.logout())
-    }  
+    }
 
-    const copyHandler = ()=>{
+    const copyHandler = () => {
         navigator.clipboard.writeText(uid)
     }
 
@@ -26,7 +28,10 @@ const Header = () => {
             <h1 onClick={e => navigate('/')}>Let's Chat</h1>
             <nav>
                 <ul>
-                    <li title={uid} onClick={copyHandler}>{name}</li>
+                    <li title={uid} onClick={copyHandler}>
+                        <img src={image} alt="" />
+                        <span>{name}</span>
+                    </li>
                     <li className='logout' onClick={logoutHandler}>logout</li>
                 </ul>
             </nav>
@@ -60,6 +65,19 @@ const Wrapper = styled.header`
             font-weight: 600;
             color: #9d9999;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            img{
+                width: 32px;
+                border-radius: 50%;
+            }
+
+            span{
+                font-size: 14px !important;
+            }
 
             &.logout{
                 color: red;

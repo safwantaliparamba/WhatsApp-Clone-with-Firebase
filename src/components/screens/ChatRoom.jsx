@@ -137,17 +137,32 @@ const InputSection = styled.div`
 
 const MessageWrapper = styled.div`
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 16px;
     margin: 12px;
 
     img{
+        margin-top: 4px;
         width: 26px;
         border-radius: 50%;
+    }
+    p{
+        font-size: 15px;
+        max-width: 85%;
+        border: 1px solid rgb(38, 39, 42);
+        padding: 8px 24px;
+        border-radius: 6px;
+        border-top-left-radius: 0;
+        background-color: rgb(22 22 25);
     }
 
     &.you{
         flex-direction: row-reverse;
         /* justify-content: flex-sta ; */
+
+        p{
+            border-top-right-radius: 0;
+            border-top-left-radius: 6px;
+        }
     }
 `

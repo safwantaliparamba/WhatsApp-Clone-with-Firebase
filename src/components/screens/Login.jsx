@@ -1,5 +1,5 @@
-import { signInWithPopup } from 'firebase/auth'
-import React from 'react'
+import { onAuthStateChanged, signInWithPopup } from 'firebase/auth'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -16,26 +16,26 @@ const Login = (e) => {
 	const [searchParams] = useSearchParams()
 
 	const LoginHandler = () => {
-		
+		const next = searchParams.get("next") ? searchParams.get("next") : '/'
+
 		signInWithPopup(auth, googleProvider)
 			.then((result) => {
-				
-				result.user.getIdToken().then(res => {
-					const userData = {
-						name: result.user.displayName,
-						email: result.user.email,
-						uid: result.user.uid,
-						isAuthenticated:true,
-						image: result.user.photoURL
-					}
-					dispatch(authActions.login(userData))
-					navigate(searchParams.get("next") ? searchParams.get("next") : '/')
-				})
+				const userData = {
+					name: result.user.displayName,
+					email: result.user.email,
+					uid: result.user.uid,
+					isAuthenticated: true,
+					image: result.user.photoURL
+				}
+
+				dispatch(authActions.login(userData))
+				navigate(next)
 			})
 			.catch(err => {
 				console.log(err);
 			})
 	}
+
 	return (
 		<Wrapper>
 			<Header>Let's Chat</Header>
