@@ -1,0 +1,179 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    background: transparent;
+    font-weight: normal;
+    text-decoration: none;
+    outline: none;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+    font-family: "gordita_regular";
+    color: #0a0a0a;
+    
+}
+ol,
+ul {
+    list-style: none;
+}
+
+p {
+    font-size: 20px;
+    line-height: 1.6em;
+    color: #7e7e7e;
+}
+aside div {
+    border: none !important;
+}
+span,
+a {
+    display: inline-block;
+    text-decoration: none;
+    color: #666666;
+}
+
+img {
+    display: block;
+    width: 100%;
+}
+
+span {
+    font-size: 20px;
+}
+.wrapper {
+    width: 85%;
+    margin: 0 auto;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* fonts */
+
+@font-face {
+    font-display: auto;
+    font-family: "gordita_regular";
+    src: url("../../assets/fonts/gordita-regular.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-display: auto;
+    font-family: "gordita_medium";
+    src: url("../../assets/fonts/gordita-medium.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "gordita_bold";
+    src: url("../../assets/fonts/gordita-bold.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* images */
+img.dashboard-white {
+    display: none;
+}
+.active img.dashboard {
+    display: none;
+}
+.active img.dashboard-white {
+    display: block;
+}
+
+img.video-white {
+    display: none;
+}
+.active img.videos {
+    display: none;
+}
+.active img.video-white {
+    display: block;
+}
+
+img.college-white{
+    display: none;
+}
+.active img.college {
+    display: none;
+}
+.active img.college-white{
+    display: block;
+}
+
+img.candidates-white{
+    display: none;
+}
+.active img.candidates {
+    display: none;
+}
+.active img.candidates-white{
+    display: block;
+}
+img.interview-white{
+    display: none;
+}
+.active img.interview {
+    display: none;
+}
+.active img.interview-white{
+    display: block;
+}
+
+img.white-members{
+    display: none;
+}
+.active img.members {
+    display: none;
+}
+.active img.white-members{
+    display: block;
+}
+
+/* avatar */
+.sb-avatar div div span span {
+    color: #fff !important;
+}
+
+.MuiCircularProgress-svg {
+    color: #30B6A7;
+    width: 70px;
+    position: relative;
+
+}
+.upload .MuiBox-root-4 {
+    position: absolute;
+    top: 39px;
+    color: #747474;
+    font-family: gordita_medium;
+   
+}
+.MuiCircularProgress-root {
+    width: 76px !important;
+    height: 76px !important;
+}
+/* react select */
+.css-rh82gz-DropDown {
+	width: 100% !important;
+}
+.css-wmy1p7-ReactDropdownSelect {
+    
+}
+.react-dropdown-select-input ::placeholder {
+    font-family: "gordita_medium" !important;
+    color: #adadad;
+
+}

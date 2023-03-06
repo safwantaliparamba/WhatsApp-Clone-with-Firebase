@@ -1,0 +1,84 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    background: transparent;
+    font-weight: normal;
+    text-decoration: none;
+    outline: none;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+    font-family: "gordita_regular";
+    color: #0a0a0a;
+    
+}
+ol,
+ul {
+    list-style: none;
+}
+
+p {
+    font-size: 20px;
+    line-height: 1.6em;
+    color: #7e7e7e;
+}
+aside div {
+    border: none !important;
+}
+span,
+a {
+    display: inline-block;
+    text-decoration: none;
+    color: #666666;
+}
+
+img {
+    display: block;
+    width: 100%;
+}
+
+span {
+    font-size: 20px;
+}
+.wrapper {
+    width: 85%;
+    margin: 0 auto;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* fonts */
+
+@font-face {
+    font-display: auto;
+    font-family: "gordita_regular";
+    src: url("../../assets/fonts/gordita-regular.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-display: auto;
+    font-family: "gordita_medium";
+    src: url("../../assets/fonts/gordita-medium.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "gordita_bold";
+    src: url("../../assets/fonts/gordita-bold.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
