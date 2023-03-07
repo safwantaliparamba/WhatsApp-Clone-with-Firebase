@@ -1,15 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 import styled from 'styled-components'
 import Header from '../../includes/Header'
+import Profile from '../../includes/modal/Profile'
 import Sidebar from '../../includes/Sidebar'
 import ChatRoom from '../../screens/ChatRoom'
 import Home from '../../screens/Home'
 
 const AppRouter = () => {
+	const isVerified = useSelector(state => state.auth.isVerified)
+	const [showProfile, setShow] = useState(false)
+
+	const profileCloseHandler = () => {
+		setShow(false)
+	}
+
 	return (
 		<Wrapper>
-			<Header />
+			{(!isVerified || showProfile) && (
+				<Profile closeHandler={profileCloseHandler} />
+			)}
+			<Header setShow={setShow} />
 			<ContentWrapper>
 				<SideNav>
 					<Sidebar />

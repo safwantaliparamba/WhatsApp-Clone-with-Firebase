@@ -41,111 +41,6 @@ const Sidebar = () => {
             lastModified:new Date(),
             image:profileImage
         },
-        {
-            id:new Date(),
-            name:"Safwan p",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"hiyas usman",
-            uid:"wujabjhbvyuwehjj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Banna",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Aysha Neema",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Kajal KM",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Safwan p",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"hiyas usman",
-            uid:"wujabjhbvyuwehjj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Banna",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Aysha Neema",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Kajal KM",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Safwan p",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"hiyas usman",
-            uid:"wujabjhbvyuwehjj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Banna",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Aysha Neema",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
-        {
-            id:new Date(),
-            name:"Kajal KM",
-            uid:"wujabjhbvyuuqgdj738171sjkn",
-            lastModified:new Date(),
-            image:profileImage
-        },
     ])
     const navigate = useNavigate()
 
@@ -157,7 +52,7 @@ const Sidebar = () => {
         <Wrapper>
             <Items>
                 {recentChatUsers.map(user => (
-                    <Item key={user.id} onClick={e => selectChatHandler(user)}>
+                    <Item key={user.name} onClick={e => selectChatHandler(user)}>
                         <Left>
                             <img src={user.image} alt="" />
                         </Left>

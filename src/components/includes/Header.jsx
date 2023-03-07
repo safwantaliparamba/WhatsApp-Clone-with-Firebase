@@ -1,12 +1,10 @@
-import { signOut } from 'firebase/auth'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { auth } from '../../config/firebase'
 import { authActions } from '../store/authSlice'
 
-const Header = () => {
+const Header = ({setShow}) => {
     // const name = useSelector(state => state.auth.name)
     const [uid, image, name] = useSelector(state => {
         return [state.auth.uid, state.auth.image, state.auth.name]
@@ -15,12 +13,11 @@ const Header = () => {
     const navigate = useNavigate()
 
     const logoutHandler = () => {
-        signOut(auth)
         dispatch(authActions.logout())
     }
 
-    const copyHandler = () => {
-        navigator.clipboard.writeText(uid)
+    const clickHandler = () => {
+        setShow(true)
     }
 
     return (
@@ -28,11 +25,10 @@ const Header = () => {
             <h1 onClick={e => navigate('/')}>Let's Chat</h1>
             <nav>
                 <ul>
-                    <li title={uid} onClick={copyHandler}>
-                        <img src={image} alt="" />
+                    <li onClick={clickHandler}>
+                        <img src={image} alt="" referrerPolicy="no-referrer" />
                         <span>{name}</span>
                     </li>
-                    <li className='logout' onClick={logoutHandler}>logout</li>
                 </ul>
             </nav>
         </Wrapper>
