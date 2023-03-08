@@ -1,5 +1,5 @@
 import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled, { keyframes } from 'styled-components'
 import { db } from '../../../config/firebase'
@@ -7,14 +7,19 @@ import { authActions } from '../../store/authSlice'
 
 const Profile = ({ closeHandler }) => {
     const dispatch = useDispatch()
+    const inputRef = useRef()
 
     const [name, phone, image, isVerified, uid] = useSelector(state => {
         const { name, phone, image, isVerified, uid } = state.auth
         return [name, phone, image, isVerified, uid]
     })
 
-    const [phoneNumber, setPhone] = useState(phone)
+    const [phoneNumber, setPhone] = useState()
     const [isAlreadyExists, setExists] = useState(false)
+
+    useEffect(() => {
+        inputRef.current && inputRef.current.focus()
+    }, [])
 
     useEffect(() => {
         setTimeout(() => {
@@ -55,12 +60,12 @@ const Profile = ({ closeHandler }) => {
             })
     }
 
-    const logoutHandler = ()=>{
+    const logoutHandler = () => {
         dispatch(authActions.logout())
     }
 
     return (
-        <Overlay onClick={()=> isVerified && closeHandler() }>
+        <Overlay onClick={() => isVerified && closeHandler()}>
             <Content onClick={e => e.stopPropagation()}>
                 <Top>
                     <img src={image} referrerPolicy="no-referrer" alt="profile" />
@@ -71,7 +76,13 @@ const Profile = ({ closeHandler }) => {
                         <span>{phone}</span>
                     ) : (
                         <>
-                            <input type="number" className={isAlreadyExists ? "exists" : ""} value={phoneNumber} onChange={e => setPhone(e.target.value)} />
+                            <input
+                                ref={inputRef}
+                                type="number"
+                                className={isAlreadyExists ? "exists" : ""}
+                                value={phoneNumber}
+                                onChange={e => setPhone(e.target.value)}
+                            />
                             {isAlreadyExists && (
                                 <p className="error">This phone number already exists</p>
                             )}
@@ -112,7 +123,7 @@ const fadeIn = keyframes`
 `
 const Content = styled.main`
     width: 600px;
-    height: 400px;
+    /* height: 400px; */
     background: #111;
     border-radius: 16px;
     padding: 32px;
@@ -154,6 +165,9 @@ const MainSection = styled.main`
         &.exists{
             border-color: red;
         }
+    }
+    span{
+        user-select: text;
     }
     p{
         color: red;

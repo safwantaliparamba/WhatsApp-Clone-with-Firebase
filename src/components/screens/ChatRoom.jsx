@@ -1,79 +1,155 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import sendIcon from "../../assets/images/sendIcon.png"
 import userIcon from "../../assets/images/demo-profile.jpg"
+import { addDoc, collection, doc, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore'
+import { db } from '../../config/firebase'
+import { chatActions } from '../store/chatSlice'
+import { v4 } from 'uuid'
 
 const ChatRoom = () => {
-    const { uid } = useParams()
+    const { roomId } = useParams()
     const inputRef = useRef()
-    const [userId, userName, image] = useSelector(state => {
-        return [state.auth.uid, state.auth.name, state.auth.image]
+    const dispatch = useDispatch()
+
+
+    const [userId, userName, phone, image, contactUser] = useSelector(state => {
+        return [state.auth.uid, state.auth.name, state.auth.phone, state.auth.image, state.chat.contactUser]
     })
 
     const [newMessage, setMessage] = useState("")
-    const [messages, setMessages] = useState([
-        {
-            id: "1",
-            user: "userId2",
-            username: "user2",
-            message: "Hiii",
-            image: userIcon,
-        },
-        {
-            id: "2",
-            user: "userId2",
-            username: "user2",
-            message: "how are you",
-            image: userIcon,
-        },
-        {
-            id: "3",
-            user: "userId3",
-            username: "user3",
-            message: "Its been a long time!",
-            image: userIcon,
-        },
-    ])
+    const [messages, setMessages] = useState([])
+    const [isMessageEmpty, setMessageEmpty] = useState(false)
+
+    const fetchMessages = () => {
+        const chatRef = collection(db, "Messages")
+        const q = query(chatRef, where("roomId", "==", roomId), orderBy("timestamp", "asc"), limit(100))
+
+        onSnapshot(q, (data) => {
+            const messages = data.docs.map(message =>{
+                if ( message.data().roomId === roomId ){
+                    return message.data()
+                }
+            })
+            console.log(messages);
+
+            if (messages.length > 0) {
+                setMessages(messages)
+            } else {
+                setMessageEmpty(true)
+            }
+
+        }, (error) => {
+            console.log(error.message);
+        })
+    }
 
     useEffect(() => {
         inputRef.current.focus()
-    }, [uid])
+        fetchMessages()
+
+        return () => {
+            dispatch(chatActions.addToContactUser({ contactUser: {} }))
+        }
+    }, [roomId])
 
     const sendMessageHandler = () => {
         if (newMessage.trim().length > 0) {
-            setMessages([...messages, {
-                id: new Date(),
-                user: userId,
-                username: userName,
+            const messageRef = collection(db, "Messages")
+
+            addDoc(messageRef, {
+                isDeleted: false,
+                isRead: false,
                 message: newMessage,
-                image: image
-            }])
+                roomId,
+                sender: userId,
+                image: image,
+                timestamp: serverTimestamp(),
+            }).then((val) => {
+                const roomRef = doc(db, "ChatRooms", roomId)
+                updateDoc(roomRef, {
+                    lastModified: serverTimestamp()
+                }).then(val => console.log(val,"room lastModified updated"))
+            })
             setMessage("")
         }
+
+    }
+
+    const initialSendMessage = (e) => {
+        // let data = {
+        //     members: [
+        //         userId,
+        //         contactUser.userId
+        //     ],
+        // }
+        // data[userId] = {
+        //     name: contactUser.name,
+        //     phone: +contactUser.phone,
+        //     image: contactUser.image
+        // }
+        // data[contactUser.userId] = {
+        //     name: userName,
+        //     phone: +phone,
+        //     image: image,
+        // }
+
+        // const chatRoomRef = collection(db, "ChatRooms")
+
+        // addDoc(chatRoomRef, data)
+        //     .then((value) => {
+        //         console.log(value.id);
+        //     }).catch(err => {
+        //         console.log(err);
+        //     })
+
+
+        const messageRef = collection(db, "Messages")
+
+        addDoc(messageRef, {
+            isDeleted: false,
+            isRead: false,
+            message: "Hii",
+            roomId,
+            sender: userId,
+            image: image,
+            timestamp: serverTimestamp(),
+        })
     }
 
     return (
         <>
             <Helmet>
-                <title>{uid}</title>
+                <title>{roomId}</title>
             </Helmet>
             <Wrapper>
                 <ChatsContainer>
-                    {messages.map(message => (
+                    {messages?.map(message => (
                         <>
-                            <MessageWrapper key={message.id} className={message.user === userId ? "you" : ""}>
+                            <MessageWrapper key={message.timestamp} className={message.sender === userId ? "you" : ""}>
                                 <img src={message.image} alt="" referrerPolicy="no-referrer" />
                                 <p>{message.message}</p>
                             </MessageWrapper>
                         </>
                     ))}
+                    {(!messages.length && isMessageEmpty) && (
+                        <EmptyChatContainer>
+                            <span onClick={initialSendMessage}>Click me to Send Hii</span>
+                        </EmptyChatContainer>
+                    )}
                 </ChatsContainer>
                 <InputSection>
-                    <input type="text" ref={inputRef} onChange={e => setMessage(e.target.value)} value={newMessage} />
+                    <input
+                        type="text"
+                        ref={inputRef}
+                        onChange={e => setMessage(e.target.value)}
+                        value={newMessage}
+                        placeholder="Type a message...."
+                    />
                     <button className="wrapper" onClick={sendMessageHandler}>
                         <img src={sendIcon} alt="" />
                     </button>
@@ -132,6 +208,17 @@ const InputSection = styled.div`
             width: 24px;
             margin: 0;
         }
+    }
+`
+
+const EmptyChatContainer = styled.div`
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span{
+        cursor: pointer;
     }
 `
 
