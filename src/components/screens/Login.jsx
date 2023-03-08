@@ -40,7 +40,8 @@ const Login = (e) => {
 								phone: 0,
 								userId: result.user.uid,
 								isVerified: false,
-								name: result.user.displayName
+								name: result.user.displayName,
+								image:result.user.photoURL
 							}
 							setDoc(ref, data)
 							dispatch(authActions.login({ ...userData, ...data }))
