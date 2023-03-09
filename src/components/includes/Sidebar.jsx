@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import profileImage from "../../assets/images/demo-profile.jpg"
+// import profileImage from "../../assets/images/demo-profile.jpg"
 import search from "../../assets/images/Search.png"
 import { db } from '../../config/firebase'
 import { chatActions } from '../store/chatSlice'
@@ -11,9 +11,9 @@ import { chatActions } from '../store/chatSlice'
 
 const Sidebar = ({ setContact }) => {
     const currentUserId = useSelector(state => state.auth.uid)
+
     const [chatRooms, setChatRooms] = useState([])
     const [keyword, setKeyword] = useState("")
-    const activeChatId = useSelector(state => state.chat.activeChat)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -23,7 +23,7 @@ const Sidebar = ({ setContact }) => {
         const chatRoomRef = collection(db, "ChatRooms")
         const q = query(chatRoomRef, where("members", "array-contains", currentUserId), orderBy("lastModified", "desc"))
 
-        onSnapshot(q, (data) => {
+        const unSubscribe = onSnapshot(q, (data) => {
             const rooms = data.docs.map(doc => {
                 return { roomId: doc.id, ...doc.data() }
             })
@@ -35,11 +35,17 @@ const Sidebar = ({ setContact }) => {
         }, (err) => {
             console.log(err.message);
         })
+
+        return unSubscribe
     }
 
     useEffect(() => {
         console.log(currentUserId);
-        fetchChatRooms()
+        const unSubscribe = fetchChatRooms()
+
+        return () => {
+            unSubscribe && unSubscribe()
+        }
     }, [])
 
     const selectChatHandler = (room) => {

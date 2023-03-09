@@ -14,7 +14,7 @@ const Profile = ({ closeHandler }) => {
         return [name, phone, image, isVerified, uid]
     })
 
-    const [phoneNumber, setPhone] = useState()
+    const [phoneNumber, setPhone] = useState("")
     const [isAlreadyExists, setExists] = useState(false)
 
     useEffect(() => {
@@ -30,7 +30,9 @@ const Profile = ({ closeHandler }) => {
     const setPhoneNumber = () => {
         const userRef = collection(db, "Users")
         const q = query(userRef, where("phone", "==", +phoneNumber))
-        getDocs(q)
+        
+        if (phoneNumber.trim().length === 10){
+            getDocs(q)
             .then((res) => {
                 const isExists = res.docs.map((doc) => {
 
@@ -51,13 +53,11 @@ const Profile = ({ closeHandler }) => {
                     const ref = doc(db, "Users", uid)
                     updateDoc(ref, data)
                         .then(() => {
-                            dispatch(authActions.verify({
-                                isVerified: true,
-                                phone: +phoneNumber,
-                            }))
+                            dispatch(authActions.verify(data))
                         })
                 }
             })
+        }
     }
 
     const logoutHandler = () => {
@@ -81,7 +81,12 @@ const Profile = ({ closeHandler }) => {
                                 type="number"
                                 className={isAlreadyExists ? "exists" : ""}
                                 value={phoneNumber}
+                                placeholder="Enter your 10 digit phone number..."
                                 onChange={e => setPhone(e.target.value)}
+                                onKeyDown={e =>{
+                                    const keyCodes = ["e","E"]
+                                    keyCodes.includes(e.key) && e.preventDefault();
+                                }}
                             />
                             {isAlreadyExists && (
                                 <p className="error">This phone number already exists</p>
@@ -159,6 +164,7 @@ const MainSection = styled.main`
         font-size: 16px;
     }
     input{
+        width: 60%;
         border: 1px solid rgb(157 153 153);
         border-radius: 8px;
 

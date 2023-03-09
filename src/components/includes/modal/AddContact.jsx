@@ -38,9 +38,6 @@ const AddContact = ({ closeHandler }) => {
         }
     }
 
-    console.log(user);
-    const initialSendMessage = (e) => {
-    }
     const startChatHandler = () => {
         dispatch(chatActions.addToContactUser({ contactUser: user }))
 
@@ -94,7 +91,12 @@ const AddContact = ({ closeHandler }) => {
                 <h1>Search user to start Chating!!</h1>
                 <SearchContainer>
                     <div className="content">
-                        <input type="number" placeholder='search by phone number....' value={keyword} onChange={e => setKeyword(e.target.value)} />
+                        <input 
+                        type="number" 
+                        placeholder='search by phone number....' 
+                        value={keyword} 
+                        onChange={e => setKeyword(e.target.value)} 
+                        />
                         <button onClick={SearchHandler}>
                             <img src={search} alt="search icon" />
                         </button>
