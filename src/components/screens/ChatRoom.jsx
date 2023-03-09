@@ -29,9 +29,9 @@ const ChatRoom = () => {
         const chatRef = collection(db, "Messages")
         const q = query(chatRef, where("roomId", "==", roomId), orderBy("timestamp", "asc"), limit(100))
 
-        onSnapshot(q, (data) => {
-            const messages = data.docs.map(message =>{
-                if ( message.data().roomId === roomId ){
+        const unSubscribe = onSnapshot(q, (data) => {
+            const messages = data.docs.map(message => {
+                if (message.data().roomId === roomId) {
                     return message.data()
                 }
             })
@@ -46,14 +46,17 @@ const ChatRoom = () => {
         }, (error) => {
             console.log(error.message);
         })
+
+        return unSubscribe
     }
 
     useEffect(() => {
         inputRef.current.focus()
-        fetchMessages()
+        const unSubscribe = fetchMessages()
 
         return () => {
             dispatch(chatActions.addToContactUser({ contactUser: {} }))
+            unSubscribe && unSubscribe()
         }
     }, [roomId])
 
@@ -73,7 +76,7 @@ const ChatRoom = () => {
                 const roomRef = doc(db, "ChatRooms", roomId)
                 updateDoc(roomRef, {
                     lastModified: serverTimestamp()
-                }).then(val => console.log(val,"room lastModified updated"))
+                }).then(val => console.log(val, "room lastModified updated"))
             })
             setMessage("")
         }
