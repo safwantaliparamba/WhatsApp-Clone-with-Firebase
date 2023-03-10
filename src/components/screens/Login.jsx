@@ -1,5 +1,5 @@
 import { onAuthStateChanged, signInWithPopup } from 'firebase/auth'
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
+import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
 import { getToken } from 'firebase/messaging'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -46,6 +46,7 @@ const Login = (e) => {
 									name: result.user.displayName,
 									image: result.user.photoURL,
 									token,
+									createdAt:serverTimestamp()
 								}
 								setDoc(ref, data)
 								dispatch(authActions.login({ ...userData, ...data }))

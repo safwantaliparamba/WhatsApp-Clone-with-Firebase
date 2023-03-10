@@ -13,13 +13,15 @@ const Sidebar = ({ setContact }) => {
     const currentUserId = useSelector(state => state.auth.uid)
 
     const [chatRooms, setChatRooms] = useState([])
+    const [tempChatRooms, setTemp] = useState([])
     const [keyword, setKeyword] = useState("")
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const location = useLocation()
+    const uid = useSelector(state => state.auth.uid)
 
-    const fetchChatRooms =  () => {
+    const fetchChatRooms = () => {
         const chatRoomRef = collection(db, "ChatRooms")
         const q = query(chatRoomRef, where("members", "array-contains", currentUserId), orderBy("lastModified", "desc"))
 
@@ -31,6 +33,7 @@ const Sidebar = ({ setContact }) => {
 
             if (rooms.length > 0) {
                 setChatRooms(rooms)
+                setTemp(rooms)
             }
         }, (err) => {
             console.log(err.message);
@@ -41,7 +44,7 @@ const Sidebar = ({ setContact }) => {
 
     useEffect(() => {
         var unSubscribe = null
-        unSubscribe =  fetchChatRooms()
+        unSubscribe = fetchChatRooms()
 
         return () => {
             unSubscribe && unSubscribe()
@@ -55,16 +58,31 @@ const Sidebar = ({ setContact }) => {
         navigate(`/chat/${room.roomId}/`)
     }
 
-    const SearchHandler = (e) => {
-        console.log(keyword);
+    const searchHandler = () => {
+
+        if (keyword.trim().length === 0) {
+            setChatRooms([...tempChatRooms])
+        } else {
+            setChatRooms([...tempChatRooms.filter(room => room[uid].name.toLowerCase().includes(keyword.trim()))])
+        }
     }
+
+    useEffect(() => {
+        let timer = setTimeout(() => {
+            searchHandler()
+        }, 1000)
+
+        return ()=>{
+            clearTimeout(timer)
+        }
+    }, [keyword])
 
     return (
         <Wrapper>
             <SearchContainer>
                 <div className="content">
                     <input type="text" placeholder='search....' value={keyword} onChange={e => setKeyword(e.target.value)} />
-                    <button onClick={SearchHandler}>
+                    <button onClick={searchHandler}>
                         <img src={search} alt="search icon" />
                     </button>
                 </div>

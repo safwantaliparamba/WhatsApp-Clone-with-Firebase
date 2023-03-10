@@ -1,4 +1,4 @@
-const getLocalStorageItem = (key,json) => {
+const getLocalStorageItem = (key,json=false) => {
     let item = localStorage.getItem(key);
 
     if (item !== undefined || item !== null) {

@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
+
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-
-import sendIcon from "../../assets/images/sendIcon.png"
-// import userIcon from "../../assets/images/demo-profile.jpg"
 import { addDoc, collection, doc, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore'
+
 import { db } from '../../config/firebase'
 import FCMMessage from '../../config/axiosInstance'
+import sendIcon from "../../assets/images/sendIcon.png"
+// import userIcon from "../../assets/images/demo-profile.jpg"
 
 const ChatRoom = () => {
     const { roomId } = useParams()
