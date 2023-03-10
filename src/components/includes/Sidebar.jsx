@@ -19,7 +19,7 @@ const Sidebar = ({ setContact }) => {
     const dispatch = useDispatch()
     const location = useLocation()
 
-    const fetchChatRooms = async () => {
+    const fetchChatRooms =  () => {
         const chatRoomRef = collection(db, "ChatRooms")
         const q = query(chatRoomRef, where("members", "array-contains", currentUserId), orderBy("lastModified", "desc"))
 
@@ -40,8 +40,8 @@ const Sidebar = ({ setContact }) => {
     }
 
     useEffect(() => {
-        console.log(currentUserId);
-        const unSubscribe = fetchChatRooms()
+        var unSubscribe = null
+        unSubscribe =  fetchChatRooms()
 
         return () => {
             unSubscribe && unSubscribe()

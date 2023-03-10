@@ -14,12 +14,13 @@ const AddContact = ({ closeHandler }) => {
     const [notFound, setFound] = useState(false)
     const [user, setUser] = useState({})
 
-    const [userId, userName, phone, image, contactUser] = useSelector(state => {
-        return [state.auth.uid, state.auth.name, state.auth.phone, state.auth.image, state.chat.contactUser]
+    const [userId, userName, phone, image, token] = useSelector(state => {
+        return [state.auth.uid, state.auth.name, state.auth.phone, state.auth.image, state.auth.FCMToken]
     })
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
 
     const SearchHandler = async () => {
         if (keyword.trim().length === 10) {
@@ -39,7 +40,8 @@ const AddContact = ({ closeHandler }) => {
     }
 
     const startChatHandler = () => {
-        dispatch(chatActions.addToContactUser({ contactUser: user }))
+        dispatch(chatActions.addActiveChat({ activeChatRoom: user }))
+
 
         let data = {
             members: [
@@ -51,12 +53,14 @@ const AddContact = ({ closeHandler }) => {
         data[userId] = {
             name: user.name,
             phone: +user.phone,
-            image: user.image
+            image: user.image,
+            token: user.token
         }
         data[user.userId] = {
             name: userName,
             phone: +phone,
             image: image,
+            token,
         }
 
         const chatRoomRef = collection(db, "ChatRooms")
@@ -91,11 +95,11 @@ const AddContact = ({ closeHandler }) => {
                 <h1>Search user to start Chating!!</h1>
                 <SearchContainer>
                     <div className="content">
-                        <input 
-                        type="number" 
-                        placeholder='search by phone number....' 
-                        value={keyword} 
-                        onChange={e => setKeyword(e.target.value)} 
+                        <input
+                            type="number"
+                            placeholder='search by phone number....'
+                            value={keyword}
+                            onChange={e => setKeyword(e.target.value)}
                         />
                         <button onClick={SearchHandler}>
                             <img src={search} alt="search icon" />

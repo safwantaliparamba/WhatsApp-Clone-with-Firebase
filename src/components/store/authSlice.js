@@ -1,18 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase";
+import getLocalStorageItem from "../functions/getLocalStorage";
 
 
 const initialState = {
-    isAuthenticated: localStorage.getItem("isAuthenticated") === "true" ? true : false,
-    uid: localStorage.getItem("uid") ? localStorage.getItem("uid") : null,
-    image: localStorage.getItem("image") ? localStorage.getItem("image") : null,
-    name: localStorage.getItem("name") ? localStorage.getItem("name") : null,
-    email: localStorage.getItem("email") ? localStorage.getItem("email") : null,
-    phone: localStorage.getItem("phone") ? localStorage.getItem("phone") : null,
-    isVerified: localStorage.getItem("isVerified") === "true" ? true : false,
+    isAuthenticated: getLocalStorageItem("isAuthenticated"),
+    uid: getLocalStorageItem("uid"),
+    image: getLocalStorageItem("image"),
+    name: getLocalStorageItem("name"),
+    email: getLocalStorageItem("email"),
+    phone: getLocalStorageItem("phone"),
+    isVerified: getLocalStorageItem("isVerified"),
+    FCMToken: getLocalStorageItem("FCMToken"),
 }
-
 
 const authSlice = createSlice({
     name: "auth",
@@ -46,12 +47,14 @@ const authSlice = createSlice({
             state.isAuthenticated = false
         },
         verify: (state, action) => {
-            const { phone, isVerified } = action.payload
+            const { phone, isVerified, token } = action.payload
             state.phone = phone
             state.isVerified = isVerified
+            state.FCMToken = token
 
             localStorage.setItem("phone", phone)
             localStorage.setItem("isVerified", isVerified)
+            localStorage.setItem("FCMToken", token)
         }
     }
 })

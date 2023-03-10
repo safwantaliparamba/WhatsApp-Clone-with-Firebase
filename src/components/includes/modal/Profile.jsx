@@ -1,8 +1,9 @@
 import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore'
+import { getToken } from 'firebase/messaging'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled, { keyframes } from 'styled-components'
-import { db } from '../../../config/firebase'
+import { db, messaging } from '../../../config/firebase'
 import { authActions } from '../../store/authSlice'
 
 const Profile = ({ closeHandler }) => {
@@ -27,36 +28,45 @@ const Profile = ({ closeHandler }) => {
         }, 3000)
     }, [isAlreadyExists])
 
-    const setPhoneNumber = () => {
+    const sendToken = async() => {
+        const token = await getToken(messaging)
+
+        console.log(token);
+
+        const data = {
+            isVerified: true,
+            phone: +phoneNumber,
+            isOnline: true,
+            token
+        }
+
+        const ref = doc(db, "Users", uid)
+        updateDoc(ref, data)
+            .then(() => {
+                dispatch(authActions.verify(data))
+            })
+    }
+
+    const setPhoneNumber = async() => {
         const userRef = collection(db, "Users")
         const q = query(userRef, where("phone", "==", +phoneNumber))
-        
-        if (phoneNumber.trim().length === 10){
+
+        if (phoneNumber.trim().length === 10) {
             getDocs(q)
-            .then((res) => {
-                const isExists = res.docs.map((doc) => {
+                .then((res) => {
+                    const isExists = res.docs.map((doc) => {
 
-                    return { id: doc.id, ...doc.data() };
-                })
+                        return { id: doc.id, ...doc.data() };
+                    })
 
-                if (isExists.length > 0) {
-                    setExists(true)
+                    if (isExists.length > 0) {
+                        setExists(true)
 
-                } else {
-                    setExists(false)
-
-                    const data = {
-                        isVerified: true,
-                        phone: +phoneNumber
+                    } else {
+                        setExists(false)
+                        sendToken()
                     }
-
-                    const ref = doc(db, "Users", uid)
-                    updateDoc(ref, data)
-                        .then(() => {
-                            dispatch(authActions.verify(data))
-                        })
-                }
-            })
+                })
         }
     }
 
@@ -83,8 +93,8 @@ const Profile = ({ closeHandler }) => {
                                 value={phoneNumber}
                                 placeholder="Enter your 10 digit phone number..."
                                 onChange={e => setPhone(e.target.value)}
-                                onKeyDown={e =>{
-                                    const keyCodes = ["e","E"]
+                                onKeyDown={e => {
+                                    const keyCodes = ["e", "E"]
                                     keyCodes.includes(e.key) && e.preventDefault();
                                 }}
                             />

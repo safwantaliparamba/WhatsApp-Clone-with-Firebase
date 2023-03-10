@@ -11,11 +11,12 @@ const PrivateRoute = ({ children }) => {
         children
     ) : (
         <Navigate
-            to={
-                location.pathname
-                    ? `auth/login?next=${location.pathname}`
-                    : "auth/login"
-            }
+            to="/auth/login"
+            // to={
+            //     location.pathname
+            //         ? `auth/login?next=${location.pathname}`
+            //         : "auth/login"
+            // }
         />
     );
 };
