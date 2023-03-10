@@ -20,7 +20,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            const { uid, image, isAuthenticated, name, email, phone, isVerified } = action.payload
+            const { uid, image, isAuthenticated, name, email, phone, isVerified, token } = action.payload
             const newState = {
                 uid,
                 name,
@@ -29,6 +29,7 @@ const authSlice = createSlice({
                 email,
                 isVerified,
                 isAuthenticated,
+                FCMToken: token,
             }
 
             localStorage.setItem("uid", uid)
@@ -37,6 +38,7 @@ const authSlice = createSlice({
             localStorage.setItem("image", image)
             localStorage.setItem("phone", phone)
             localStorage.setItem("isVerified", isVerified)
+            localStorage.setItem("FCMToken", token)
             localStorage.setItem("isAuthenticated", isAuthenticated)
 
             return newState
