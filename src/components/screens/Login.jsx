@@ -36,7 +36,7 @@ const Login = (e) => {
 				getDoc(ref)
 					.then(user => {
 						console.log(user.exists());
-						getToken(messaging).then(token => {
+						getToken(messaging,{vapidKey:"BLmIZTYvwyznj1RS1Zd-wOt0yP3mwOWr_5UMtbq-uDdCRt_C24GvWPbi2ZtufyEXwMus4lBFcnhXIgSH2MQaY58"}).then(token => {
 
 							if (!user.exists()) {
 								const data = {

@@ -13,6 +13,7 @@ const initialState = {
     phone: getLocalStorageItem("phone"),
     isVerified: getLocalStorageItem("isVerified"),
     FCMToken: getLocalStorageItem("FCMToken"),
+    accessToken: getLocalStorageItem("access"),
 }
 
 const authSlice = createSlice({
@@ -20,7 +21,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            const { uid, image, isAuthenticated, name, email, phone, isVerified, token } = action.payload
+            const { uid, image, isAuthenticated, name, email, phone, isVerified, token,access } = action.payload
             const newState = {
                 uid,
                 name,
@@ -30,6 +31,7 @@ const authSlice = createSlice({
                 isVerified,
                 isAuthenticated,
                 FCMToken: token,
+                accessToken:access
             }
 
             localStorage.setItem("uid", uid)
@@ -37,8 +39,9 @@ const authSlice = createSlice({
             localStorage.setItem("email", email)
             localStorage.setItem("image", image)
             localStorage.setItem("phone", phone)
-            localStorage.setItem("isVerified", isVerified)
             localStorage.setItem("FCMToken", token)
+            localStorage.setItem("accessToken", access)
+            localStorage.setItem("isVerified", isVerified)
             localStorage.setItem("isAuthenticated", isAuthenticated)
 
             return newState

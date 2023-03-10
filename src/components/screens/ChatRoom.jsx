@@ -53,12 +53,15 @@ const ChatRoom = () => {
         inputRef.current.focus()
         var unSubscribe = null
         unSubscribe = fetchMessages()
-        document.querySelector("span.go-below").scrollIntoView({ behavior: 'smooth' })
 
         return () => {
             unSubscribe()
         }
     }, [roomId])
+
+    useEffect(() => {
+        document.querySelector("span.go-below").scrollIntoView({ behavior: 'smooth' })
+    }, [messages])
 
     const sendNotification = () => {
         const data = {
@@ -79,6 +82,16 @@ const ChatRoom = () => {
             .catch(err => {
                 console.log(err);
             })
+
+
+        // messaging
+        //     .send(data)
+        //     .then(response => {
+        //         console.log(response);
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     })
     }
 
     const sendMessageHandler = () => {
