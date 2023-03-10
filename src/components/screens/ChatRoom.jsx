@@ -1,24 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import sendIcon from "../../assets/images/sendIcon.png"
-import userIcon from "../../assets/images/demo-profile.jpg"
+// import userIcon from "../../assets/images/demo-profile.jpg"
 import { addDoc, collection, doc, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore'
 import { db } from '../../config/firebase'
-import { chatActions } from '../store/chatSlice'
-import { v4 } from 'uuid'
+import FCMMessage from '../../config/axiosInstance'
 
 const ChatRoom = () => {
     const { roomId } = useParams()
     const inputRef = useRef()
-    const dispatch = useDispatch()
 
 
-    const [userId, userName, phone, image, contactUser] = useSelector(state => {
-        return [state.auth.uid, state.auth.name, state.auth.phone, state.auth.image, state.chat.contactUser]
+    const [userId, name, image, activeChat] = useSelector(state => {
+        return [state.auth.uid, state.auth.name, state.auth.image, state.chat.activeChat]
     })
 
     const [newMessage, setMessage] = useState("")
@@ -31,6 +29,7 @@ const ChatRoom = () => {
 
         const unSubscribe = onSnapshot(q, (data) => {
             const messages = data.docs.map(message => {
+
                 if (message.data().roomId === roomId) {
                     return message.data()
                 }
@@ -52,13 +51,35 @@ const ChatRoom = () => {
 
     useEffect(() => {
         inputRef.current.focus()
-        const unSubscribe = fetchMessages()
+        var unSubscribe = null
+        unSubscribe = fetchMessages()
+        document.querySelector("span.go-below").scrollIntoView({ behavior: 'smooth' })
 
         return () => {
-            dispatch(chatActions.addToContactUser({ contactUser: {} }))
-            unSubscribe && unSubscribe()
+            unSubscribe()
         }
     }, [roomId])
+
+    const sendNotification = () => {
+        const data = {
+            to: activeChat[userId]?.token,
+            notification: {
+                title: "You have a new message",
+                body: `${name} send you a new message`,
+                subtitle: "new message",
+            }
+        }
+
+        console.log(data);
+
+        FCMMessage.post("send", data)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
 
     const sendMessageHandler = () => {
         if (newMessage.trim().length > 0) {
@@ -78,39 +99,13 @@ const ChatRoom = () => {
                     lastModified: serverTimestamp()
                 }).then(val => console.log(val, "room lastModified updated"))
             })
+            sendNotification()
             setMessage("")
         }
 
     }
 
     const initialSendMessage = (e) => {
-        // let data = {
-        //     members: [
-        //         userId,
-        //         contactUser.userId
-        //     ],
-        // }
-        // data[userId] = {
-        //     name: contactUser.name,
-        //     phone: +contactUser.phone,
-        //     image: contactUser.image
-        // }
-        // data[contactUser.userId] = {
-        //     name: userName,
-        //     phone: +phone,
-        //     image: image,
-        // }
-
-        // const chatRoomRef = collection(db, "ChatRooms")
-
-        // addDoc(chatRoomRef, data)
-        //     .then((value) => {
-        //         console.log(value.id);
-        //     }).catch(err => {
-        //         console.log(err);
-        //     })
-
-
         const messageRef = collection(db, "Messages")
 
         addDoc(messageRef, {
@@ -126,24 +121,23 @@ const ChatRoom = () => {
 
     return (
         <>
-            <Helmet>
-                <title>{roomId}</title>
-            </Helmet>
+            {/* <Helmet>
+                <title>Chat with {activeChat && activeChat[userId]?.name}</title>
+            </Helmet> */}
             <Wrapper>
                 <ChatsContainer>
                     {messages?.map(message => (
-                        <>
-                            <MessageWrapper key={message.timestamp} className={message.sender === userId ? "you" : ""}>
-                                <img src={message.image} alt="" referrerPolicy="no-referrer" />
-                                <p>{message.message}</p>
-                            </MessageWrapper>
-                        </>
+                        <MessageWrapper key={message.timestamp} className={message.sender === userId ? "you" : ""}>
+                            <img src={message.image} alt="" referrerPolicy="no-referrer" />
+                            <p>{message.message}</p>
+                        </MessageWrapper>
                     ))}
                     {(!messages.length && isMessageEmpty) && (
                         <EmptyChatContainer>
                             <span onClick={initialSendMessage}>Click me to Send Hii</span>
                         </EmptyChatContainer>
                     )}
+                    <span className="go-below"></span>
                 </ChatsContainer>
                 <InputSection>
                     <input
@@ -167,29 +161,33 @@ export default ChatRoom
 const Wrapper = styled.main`
     height: 100%;
     display: flex;
-    gap: 12px;
     flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    
     h1{
         color: rgb(157 153 153);
     }
 `
 const ChatsContainer = styled.section`
     width: 100%;
-    height: 95%;
-    max-height: 95%;
+    /* height: 95%;
+    max-height: 95%; */
+    /* flex: 1; */
+    height: 76vh;
     overflow-y: scroll;
     border: 1px solid rgb(38,39,42);
 	background-color: rgb(27 28 31);
 `
 const InputSection = styled.div`
-    height: 5%;
+    /* height: 5%; */
     border: 1px solid rgb(38,39,42);
 	background-color: rgb(27 28 31);
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 0 24px;
+    padding:  24px;
 
     input{
         display: block;

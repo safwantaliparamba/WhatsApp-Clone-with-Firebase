@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import getLocalStorageItem from "../functions/getLocalStorage";
 
 
 const initialState = {
-    activeChat: {},
-    contactUser:{}
+    activeChat: getLocalStorageItem("activeChat",true),
+    // contactUser:{}
 }
 
 const chatSlice = createSlice({
@@ -12,10 +13,12 @@ const chatSlice = createSlice({
     reducers: {
         addActiveChat: (state, { payload }) => {
             state.activeChat = payload.activeChatRoom
+
+            localStorage.setItem("activeChat", JSON.stringify(state.activeChat))
         },
-        addToContactUser: (state, { payload }) => {
-            state.contactUser = payload.contactUser
-        }
+        // addToContactUser: (state, { payload }) => {
+        //     state.contactUser = payload.contactUser
+        // }
     }
 })
 
