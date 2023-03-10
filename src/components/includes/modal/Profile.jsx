@@ -45,6 +45,9 @@ const Profile = ({ closeHandler }) => {
             .then(() => {
                 dispatch(authActions.verify(data))
             })
+            .catch(err => {
+                alert(err.message)
+            })
     }
 
     const setPhoneNumber = async() => {
