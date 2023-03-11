@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { addDoc, collection, doc, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore'
 
 import { db } from '../../config/firebase'
-import FCMMessage from '../../config/axiosInstance'
+// import FCMMessage from '../../config/axiosInstance'
 import sendIcon from "../../assets/images/sendIcon.png"
 // import userIcon from "../../assets/images/demo-profile.jpg"
 
@@ -76,13 +76,13 @@ const ChatRoom = () => {
 
         console.log(data);
 
-        FCMMessage.post("send", data)
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        // FCMMessage.post("send", data)
+        //     .then(response => {
+        //         console.log(response.data);
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     })
 
 
         // messaging
@@ -113,7 +113,7 @@ const ChatRoom = () => {
                     lastModified: serverTimestamp()
                 }).then(val => console.log(val, "room lastModified updated"))
             })
-            sendNotification()
+            // sendNotification()
             setMessage("")
         }
 

@@ -16,10 +16,10 @@ const Sidebar = ({ setContact }) => {
     const [tempChatRooms, setTemp] = useState([])
     const [keyword, setKeyword] = useState("")
 
+
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const location = useLocation()
-    const uid = useSelector(state => state.auth.uid)
 
     const fetchChatRooms = () => {
         const chatRoomRef = collection(db, "ChatRooms")
@@ -63,16 +63,16 @@ const Sidebar = ({ setContact }) => {
         if (keyword.trim().length === 0) {
             setChatRooms([...tempChatRooms])
         } else {
-            setChatRooms([...tempChatRooms.filter(room => room[uid].name.toLowerCase().includes(keyword.trim()))])
+            setChatRooms([...tempChatRooms.filter(room => room[currentUserId].name.toLowerCase().includes(keyword.trim()))])
         }
     }
 
     useEffect(() => {
         let timer = setTimeout(() => {
-            searchHandler()
+            if (keyword) searchHandler()
         }, 1000)
 
-        return ()=>{
+        return () => {
             clearTimeout(timer)
         }
     }, [keyword])
