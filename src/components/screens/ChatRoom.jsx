@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
+
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { addDoc, collection, doc, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore'
 
+import { db } from '../../config/firebase'
+// import FCMMessage from '../../config/axiosInstance'
 import sendIcon from "../../assets/images/sendIcon.png"
 // import userIcon from "../../assets/images/demo-profile.jpg"
-import { addDoc, collection, doc, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore'
-import { db } from '../../config/firebase'
-import FCMMessage from '../../config/axiosInstance'
 
 const ChatRoom = () => {
     const { roomId } = useParams()
@@ -53,12 +54,15 @@ const ChatRoom = () => {
         inputRef.current.focus()
         var unSubscribe = null
         unSubscribe = fetchMessages()
-        document.querySelector("span.go-below").scrollIntoView({ behavior: 'smooth' })
 
         return () => {
             unSubscribe()
         }
     }, [roomId])
+
+    useEffect(() => {
+        document.querySelector("span.go-below").scrollIntoView({ behavior: 'smooth' })
+    }, [messages])
 
     const sendNotification = () => {
         const data = {
@@ -72,13 +76,23 @@ const ChatRoom = () => {
 
         console.log(data);
 
-        FCMMessage.post("send", data)
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        // FCMMessage.post("send", data)
+        //     .then(response => {
+        //         console.log(response.data);
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     })
+
+
+        // messaging
+        //     .send(data)
+        //     .then(response => {
+        //         console.log(response);
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     })
     }
 
     const sendMessageHandler = () => {
@@ -99,7 +113,7 @@ const ChatRoom = () => {
                     lastModified: serverTimestamp()
                 }).then(val => console.log(val, "room lastModified updated"))
             })
-            sendNotification()
+            // sendNotification()
             setMessage("")
         }
 

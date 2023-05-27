@@ -29,7 +29,7 @@ const Profile = ({ closeHandler }) => {
     }, [isAlreadyExists])
 
     const sendToken = async() => {
-        const token = await getToken(messaging)
+        const token = await getToken(messaging,{vapidKey:"BLmIZTYvwyznj1RS1Zd-wOt0yP3mwOWr_5UMtbq-uDdCRt_C24GvWPbi2ZtufyEXwMus4lBFcnhXIgSH2MQaY58"})
 
         console.log(token);
 
@@ -44,6 +44,9 @@ const Profile = ({ closeHandler }) => {
         updateDoc(ref, data)
             .then(() => {
                 dispatch(authActions.verify(data))
+            })
+            .catch(err => {
+                alert(err.message)
             })
     }
 

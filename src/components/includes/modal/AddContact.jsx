@@ -49,18 +49,19 @@ const AddContact = ({ closeHandler }) => {
                 user.userId
             ],
             lastModified: serverTimestamp(),
-        }
-        data[userId] = {
-            name: user.name,
-            phone: +user.phone,
-            image: user.image,
-            token: user.token
-        }
-        data[user.userId] = {
-            name: userName,
-            phone: +phone,
-            image: image,
-            token,
+            [userId]: {
+                name: user.name,
+                phone: +user.phone,
+                image: user.image,
+                token: user.token
+            },
+            [user.userId] : {
+                name: userName,
+                phone: +phone,
+                image: image,
+                token,
+            }
+
         }
 
         const chatRoomRef = collection(db, "ChatRooms")
